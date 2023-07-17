@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import store from '../store'
 
 const routes = [
   {
@@ -33,7 +34,21 @@ const routes = [
   {
     path: '/shop',
     name: 'shop',
-    component: () => import( '../views/authuser/ShopView.vue')
+    component: () => import( '../views/authuser/ShopView.vue'),
+    beforeEnter: (to, from, next) => {
+      if (store.getters.isLoggedIn) {
+        next( );
+      } else {
+        next('/login');
+      }
+    }
+
+  },
+  {
+    path: '/task',
+    name: 'task',
+    component: () => import( '../views/task/TaskView.vue'),
+
   }
 ]
 

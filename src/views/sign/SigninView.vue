@@ -76,7 +76,8 @@
               if (user.password === this.password ){
   
         // this.login()
-        this.login(this.userType)
+        // this.login(this.userType)
+        this.login({ userType: this.userType, fname: user.fname })
           .then(() => {
             
             // Swal.fire('login successfull as user');
