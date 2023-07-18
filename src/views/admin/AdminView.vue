@@ -1,16 +1,12 @@
 
-
 <!-- task page -->
  
 <template>
-  <div class="container mb-3" style="padding: 0">
+  <div class="container mb-3 admin" style="padding: 0">
     <h1 style="color: black; margin-top: 20px" class="blogs text-center">Tasks</h1>
-
     <button type="button" class="btn btn-primary mt-3" id="addtask" data-bs-toggle="modal" data-bs-target="#addTaskModal"
       @click="showAddTaskModal"><i class="fa-regular fa-square-plus"></i></button>
     <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
-
-
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -31,6 +27,11 @@
               <input type="date" class="form-control" id="taskDueDate" v-model="newTask.duedate">
             </div>
             <div class="form-group">
+              <label for="taskTitle" class="form-label">Assigned to</label>
+              <input type="text" class="form-control" id="taskTitle" v-model="newTask.assigned">
+            </div>
+
+            <div class="form-group">
               <label for="taskDueDate" class="form-label">start Date</label>
               <input type="date" class="form-control" id="taskDueDate" v-model="newTask.startdate">
             </div>
@@ -48,22 +49,24 @@
       <div v-for="task in taskindex" :key="task.id" class="col-md-12">
         <div class="cards">
           <div class="card-body text-center">
-            <li>TASK: {{ task.title }}</li>
-            <!-- <button class="btn" id="edit" @click="editTask(task)"><i class="fa-solid fa-edit"></i></button> -->
-            <button class="btn" id="remove" @click="removeTask(task.id)"><i class="fa-solid fa-trash-can"></i></button>
+            <li>TASK: {{ task.title }}
+              <button class="btn" id="remove" @click="removeTask(task.id)"><i class="fa-solid fa-trash-can"></i></button>
+            </li>
+            <button class="btn" @click="editTask(task.id)" id="edit"><i class="fa-solid fa-pencil"></i></button>
           </div>
         </div>
       </div>
 
     </div>
     <div>
-
     </div>
   </div>
 </template>
 
- <script>
+<script>
 import { ref, onMounted } from 'vue';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 export default {
   name: 'TaskView',
@@ -75,18 +78,20 @@ export default {
       duedate: '',
       startdate: '',
       status: '',
+      assigned: '',
     });
 
     onMounted(fetchData);
 
     function fetchData() {
-      fetch('http://localhost:3000/task')
-        .then((response) => response.json())
-        .then((data) => {
-          taskindex.value = data;
+      axios.get('http://localhost:3000/task')
+        .then((response) => {
+          taskindex.value = response.data;
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
         });
     }
-
     function showAddTaskModal() {
       isAddTaskModalOpen.value = true;
     }
@@ -98,8 +103,10 @@ export default {
         duedate: '',
         startdate: '',
         status: '',
+        assigned: '',
       };
     }
+
     function addTask() {
       if (newTask.value.title && newTask.value.duedate) {
         const taskData = {
@@ -107,18 +114,12 @@ export default {
           duedate: newTask.value.duedate,
           startdate: newTask.value.startdate,
           status: newTask.value.status,
+          assigned: newTask.value.assigned,
         };
 
-        fetch('http://localhost:3000/task', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(taskData),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            taskindex.value.push(data);
+        axios.post('http://localhost:3000/task', taskData)
+          .then((response) => {
+            taskindex.value.push(response.data);
           })
           .catch((error) => {
             console.error('Error adding task:', error);
@@ -129,9 +130,7 @@ export default {
     }
 
     function removeTask(taskId) {
-      fetch(`http://localhost:3000/task/${taskId}`, {
-        method: 'DELETE',
-      })
+      axios.delete(`http://localhost:3000/task/${taskId}`)
         .then(() => {
           taskindex.value = taskindex.value.filter((task) => task.id !== taskId);
         })
@@ -139,6 +138,73 @@ export default {
           console.error('Error removing task:', error);
         });
     }
+    
+    function editTask(taskId) {
+      const taskToEdit = taskindex.value.find((task) => task.id === taskId);
+
+      Swal.fire({
+        title: 'Edit Task',
+        html: `
+      <label for="editTaskTitle">Title:</label>
+      <input type="text" id="editTaskTitle" value="${taskToEdit.title}" required>
+      <br>
+      <label for="editTaskStatus">Status:</label>
+      <input type="text" id="editTaskStatus" value="${taskToEdit.status}">
+      <br>
+      <label for="editTaskDueDate">End Date:</label>
+      <input type="date" id="editTaskDueDate" value="${taskToEdit.duedate}">
+      <br>
+      <label for="editTaskStartDate">Start Date:</label>
+      <input type="date" id="editTaskStartDate" value="${taskToEdit.startdate}">
+      <br>
+
+      <label for="editTaskAssigned">assigned to :</label>
+      <input type="text" id="editTaskAssigned" value="${taskToEdit.assigned}">
+    `,
+        showCancelButton: true,
+        focusConfirm: false,
+        preConfirm: () => {
+          const updatedTitle = document.getElementById('editTaskTitle').value;
+          const updatedStatus = document.getElementById('editTaskStatus').value;
+          const updatedDueDate = document.getElementById('editTaskDueDate').value;
+          const updatedStartDate = document.getElementById('editTaskStartDate').value;
+          const updatedAssigned = document.getElementById('editTaskAssigned').value;
+
+
+          return {
+            title: updatedTitle.trim(),
+            status: updatedStatus.trim(),
+            duedate: updatedDueDate.trim(),
+            startdate: updatedStartDate.trim(),
+            assigned: updatedAssigned.trim(),
+          };
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const updatedTask = result.value;
+          if (updatedTask.title !== '') {
+            taskToEdit.title = updatedTask.title.trim();
+            taskToEdit.status = updatedTask.status.trim();
+            taskToEdit.duedate = updatedTask.duedate.trim();
+            taskToEdit.startdate = updatedTask.startdate.trim();
+            taskToEdit.assigned = updatedTask.assigned.trim();
+
+            axios
+              .put(`http://localhost:3000/task/${taskId}`, taskToEdit)
+              .then(() => {
+                Swal.fire('Task updated successfully!', '', 'success');
+              })
+              .catch((error) => {
+                console.error('Error updating task:', error);
+                Swal.fire('Error updating task!', 'Please try again later.', 'error');
+              });
+          } else {
+            Swal.fire('Task title cannot be empty!', '', 'error');
+          }
+        }
+      });
+    }
+
 
     return {
       taskindex,
@@ -148,6 +214,8 @@ export default {
       closeAddTaskModal,
       addTask,
       removeTask,
+      editTask,
+
 
     };
   },
@@ -183,13 +251,18 @@ export default {
 }
 
 #remove {
-  background-color:red;
+  background-color: red;
   color: white;
-  margin-top: 60px;
+  margin-top: 40px;
   margin-left: 450px;
 }
 
-
+#edit {
+  background-color: grey;
+  color: white;
+  margin-top: -60px;
+  margin-left: -500px;
+}
 </style>
   
   

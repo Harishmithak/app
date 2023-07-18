@@ -14,19 +14,16 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <router-link to="/" class="nav-link">Home</router-link>
+                <router-link to="/" class="nav-link"><i class="fa-solid fa-house"></i></router-link>
               </li>
               <li class="nav-item">
                 <router-link to="/about" class="nav-link">About</router-link>
               </li>
-              <!-- <li class="nav-item">
-            <router-link to="/register" class="nav-link">Register</router-link>
-          </li> -->
-              <!-- <div v-if="isLoggedIn && userType === 'admin'||userType === 'user' "> -->
+
               <li @click="goToShoppingCart()" class="nav-item">
-                <router-link to="" class="nav-link">Tasks</router-link>
+                <router-link to="" class="nav-link">Tasks </router-link>
               </li>
-              <!-- </div> -->
+
               <li class="nav-item">
                 <router-link to="/signin" class="nav-link">login </router-link>
               </li>
@@ -39,7 +36,9 @@
               </div>
 
               <div v-if="isLoggedIn && userType === 'user'" id="user1">
+
                 <li class="nav-item">
+
                   <router-link to="" class="nav-link " id="welcome-text">Welcome, {{ userName }}</router-link>
                 </li>
               </div>
@@ -95,4 +94,18 @@ export default {
 
 #user1 #welcome-text {
   color: rgb(182, 233, 166);
-}</style>
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 300px;
+  display: inline-block;
+  border: 2px solid rgb(182, 233, 166);
+  padding: 8px 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+#user1 #welcome-text:hover {
+  background-color: rgb(182, 233, 166);
+  color: white;
+}
+</style>

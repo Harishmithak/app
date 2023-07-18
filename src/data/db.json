@@ -26,22 +26,78 @@
       "confirm": "123456",
       "userType": "user",
       "id": 3
+    },
+    {
+      "fname": "ranita",
+      "lname": "n",
+      "email": "ranita@gmail.com",
+      "password": "123456",
+      "confirm": "123456",
+      "userType": "user",
+      "id": 4
+    },
+    {
+      "fname": "pooja",
+      "lname": "v",
+      "email": "pooja@gmail.com",
+      "password": "123456",
+      "confirm": "123456",
+      "userType": "user",
+      "id": 5
     }
   ],
   "task": [
     {
+      "title": "implement login and register functionality",
+      "status": "Completed",
+      "duedate": "2023-09-06",
+      "startdate": "2023-08-29",
+      "assigned": "yamini",
       "id": 2,
-      "title": "Implement login and register functionality",
-      "duedate": "2023-09-04",
-      "startdate": "2023-08-17",
-      "status": "Not Completed"
+      "actualEndDate": "2023-07-18"
     },
     {
       "title": "implement authentication",
       "duedate": "2023-07-29",
       "startdate": "2023-07-17",
-      "status": "In progress",
-      "id": 3
+      "status": "Completed",
+      "assigned": "hari",
+      "id": 3,
+      "actualEndDate": "2023-07-18"
+    },
+    {
+      "title": "form validatuion",
+      "duedate": "2023-07-28",
+      "startdate": "2023-07-19",
+      "status": "Completed",
+      "assigned": "hari",
+      "id": 4,
+      "actualEndDate": "2023-07-18"
+    },
+    {
+      "title": "form validation using vuelidate",
+      "duedate": "2023-08-01",
+      "startdate": "2023-07-22",
+      "status": "assigned",
+      "assigned": "yamini",
+      "id": 5
+    },
+    {
+      "title": "Implement routing concept",
+      "duedate": "2023-08-14",
+      "startdate": "2023-07-27",
+      "status": "assigned",
+      "assigned": "hari",
+      "id": 6
+    },
+    {
+      "title": "implement navigation guards",
+      "duedate": "2023-07-29",
+      "startdate": "2023-07-19",
+      "assigned": "ranita",
+      "id": 7,
+      "actualEndDate": null,
+      "status": "In progress"
     }
   ]
 }
