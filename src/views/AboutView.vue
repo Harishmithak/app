@@ -34,4 +34,7 @@
 .about {
   margin-top: 20px;
 }
+body{
+  overflow-x: hidden;
+}
 </style>

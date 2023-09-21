@@ -84,7 +84,7 @@ export default {
     onMounted(fetchData);
 
     function fetchData() {
-      axios.get('http://localhost:3000/task')
+      axios.get('http://127.0.0.1:8000/api/tasks')
         .then((response) => {
           taskindex.value = response.data;
         })
@@ -117,7 +117,7 @@ export default {
           assigned: newTask.value.assigned,
         };
 
-        axios.post('http://localhost:3000/task', taskData)
+        axios.post('http://127.0.0.1:8000/api/tasks', taskData)
           .then((response) => {
             taskindex.value.push(response.data);
           })

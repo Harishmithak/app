@@ -1,5 +1,5 @@
 <template>
-  <div><img src="../assets/website.png" alt="home" class="home"></div>
+  <div><img src="../assets/task-management.webp" alt="home" class="home"></div>
 
   <div id="manage">
     <h1>MANAGE YOUR TASK</h1>

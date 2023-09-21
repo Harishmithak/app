@@ -65,7 +65,7 @@ export default {
         fetchData() {
 
 
-            fetch(`http://localhost:3000/task`)
+            fetch(`http://127.0.0.1:8000/api/tasks`)
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data);
@@ -114,7 +114,6 @@ export default {
                                     t.id === task.id ? { ...t, status: selectedStatus, actualEndDate: task.actualEndDate } : t
                                 );
                                 this.taskindex = updatedTaskIndex;
-
                             }
                         })
                         .catch((error) => {
