@@ -46,6 +46,12 @@ const routes = [
     name: 'task',
     component: () => import('../views/task/TaskView.vue'),
 
+  },
+  {
+    path: '/ag',
+    name: 'ag',
+    component: () => import('../views/aggrid/AgView.vue'),
+
   }
 ]
 

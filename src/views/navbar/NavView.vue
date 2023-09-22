@@ -19,6 +19,9 @@
               <li class="nav-item">
                 <router-link to="/about" class="nav-link">About</router-link>
               </li>
+              <li class="nav-item">
+                <router-link to="/ag" class="nav-link">AgGrid</router-link>
+              </li>
 
               <li @click="goToShoppingCart()" class="nav-item">
                 <router-link to="" class="nav-link">Tasks </router-link>

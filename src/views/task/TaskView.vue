@@ -77,51 +77,51 @@ export default {
             return task.assigned === this.userName;
         },
         showStatusUpdateModal(task) {
-            const statusOptions = ['Completed', 'Not Completed', 'In progress'];
+    const statusOptions = ['Completed', 'Not Completed', 'In progress'];
 
-            Swal.fire({
-                title: 'Update Task Status',
-                input: 'select',
-                inputOptions: statusOptions,
-                inputPlaceholder: 'Select status',
-                showCancelButton: true,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire('status updated successfully!', '', 'success');
-                    const selectedStatusIndex = result.value;
-                    const selectedStatus = statusOptions[selectedStatusIndex];
+    Swal.fire({
+        title: 'Update Task Status',
+        input: 'select',
+        inputOptions: statusOptions,
+        inputPlaceholder: 'Select status',
+        showCancelButton: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire('status updated successfully!', '', 'success');
+            const selectedStatusIndex = result.value;
+            const selectedStatus = statusOptions[selectedStatusIndex];
 
-                    if (selectedStatus === 'Completed') {
-                        const currentDate = new Date().toISOString().slice(0, 10);
-                        task.actualEndDate = currentDate;
-                    } else {
-                        task.actualEndDate = null;
+            if (selectedStatus === 'Completed') {
+                const currentDate = new Date().toISOString().slice(0, 10);
+                task.actualEndDate = currentDate;
+            } else {
+                task.actualEndDate = null;
+            }
+
+            const updatedTask = { ...task, status: selectedStatus };
+
+            fetch(`http://127.0.0.1:8000/api/tasks/${task.id}`, { 
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedTask),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.status === 'success') {
+                        const updatedTaskIndex = this.taskindex.map((t) =>
+                            t.id === task.id ? { ...t, status: selectedStatus, actualEndDate: task.actualEndDate } : t
+                        );
+                        this.taskindex = updatedTaskIndex;
                     }
-
-                    const updatedTask = { ...task, status: selectedStatus };
-
-                    fetch(`http://localhost:3000/task/${task.id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(updatedTask),
-                    })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            if (data.status === 'success') {
-                                const updatedTaskIndex = this.taskindex.map((t) =>
-                                    t.id === task.id ? { ...t, status: selectedStatus, actualEndDate: task.actualEndDate } : t
-                                );
-                                this.taskindex = updatedTaskIndex;
-                            }
-                        })
-                        .catch((error) => {
-                            console.error('Error updating task status:', error);
-                        });
-                }
-            });
-        },
+                })
+                .catch((error) => {
+                    console.error('Error updating task status:', error);
+                });
+        }
+    });
+},
 
     },
 };

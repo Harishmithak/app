@@ -63,6 +63,164 @@
   </div>
 </template>
 
+<!-- <script>
+import { ref, onMounted } from 'vue';
+import Swal from 'sweetalert2';
+import axios from 'axios';
+
+export default {
+  name: 'TaskView',
+  setup() {
+    const taskindex = ref([]);
+    const isAddTaskModalOpen = ref(false);
+    const newTask = ref({
+      title: '',
+      duedate: '',
+      startdate: '',
+      status: '',
+      assigned: '',
+    });
+
+    onMounted(fetchData);
+
+    function fetchData() {
+      axios.get('http://127.0.0.1:8000/api/tasks')
+        .then((response) => {
+          taskindex.value = response.data;
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
+    function showAddTaskModal() {
+      isAddTaskModalOpen.value = true;
+    }
+
+    function closeAddTaskModal() {
+      isAddTaskModalOpen.value = false;
+      newTask.value = {
+        title: '',
+        duedate: '',
+        startdate: '',
+        status: '',
+        assigned: '',
+      };
+    }
+
+    function addTask() {
+      if (newTask.value.title && newTask.value.duedate) {
+        const taskData = {
+          title: newTask.value.title,
+          duedate: newTask.value.duedate,
+          startdate: newTask.value.startdate,
+          status: newTask.value.status,
+          assigned: newTask.value.assigned,
+        };
+
+        axios.post('http://127.0.0.1:8000/api/tasks', taskData)
+          .then((response) => {
+            taskindex.value.push(response.data);
+          })
+          .catch((error) => {
+            console.error('Error adding task:', error);
+          });
+
+        closeAddTaskModal();
+      }
+    }
+
+    function removeTask(taskId) {
+      axios.delete(`http://127.0.0.1:8000/api/tasks/${task.id}`)
+        .then(() => {
+          taskindex.value = taskindex.value.filter((task) => task.id !== taskId);
+        })
+        .catch((error) => {
+          console.error('Error removing task:', error);
+        });
+    }
+    
+    function editTask(taskId) {
+      const taskToEdit = taskindex.value.find((task) => task.id === taskId);
+
+      Swal.fire({
+        title: 'Edit Task',
+        html: `
+      <label for="editTaskTitle">Title:</label>
+      <input type="text" id="editTaskTitle" value="${taskToEdit.title}" required>
+      <br>
+      <label for="editTaskStatus">Status:</label>
+      <input type="text" id="editTaskStatus" value="${taskToEdit.status}">
+      <br>
+      <label for="editTaskDueDate">End Date:</label>
+      <input type="date" id="editTaskDueDate" value="${taskToEdit.duedate}">
+      <br>
+      <label for="editTaskStartDate">Start Date:</label>
+      <input type="date" id="editTaskStartDate" value="${taskToEdit.startdate}">
+      <br>
+
+      <label for="editTaskAssigned">assigned to :</label>
+      <input type="text" id="editTaskAssigned" value="${taskToEdit.assigned}">
+    `,
+        showCancelButton: true,
+        focusConfirm: false,
+        preConfirm: () => {
+          const updatedTitle = document.getElementById('editTaskTitle').value;
+          const updatedStatus = document.getElementById('editTaskStatus').value;
+          const updatedDueDate = document.getElementById('editTaskDueDate').value;
+          const updatedStartDate = document.getElementById('editTaskStartDate').value;
+          const updatedAssigned = document.getElementById('editTaskAssigned').value;
+
+
+          return {
+            title: updatedTitle.trim(),
+            status: updatedStatus.trim(),
+            duedate: updatedDueDate.trim(),
+            startdate: updatedStartDate.trim(),
+            assigned: updatedAssigned.trim(),
+          };
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const updatedTask = result.value;
+          if (updatedTask.title !== '') {
+            taskToEdit.title = updatedTask.title.trim();
+            taskToEdit.status = updatedTask.status.trim();
+            taskToEdit.duedate = updatedTask.duedate.trim();
+            taskToEdit.startdate = updatedTask.startdate.trim();
+            taskToEdit.assigned = updatedTask.assigned.trim();
+
+            axios
+              .put(`http://127.0.0.1:8000/api/tasks/${task.id}`, taskToEdit)
+              .then(() => {
+                Swal.fire('Task updated successfully!', '', 'success');
+              })
+              .catch((error) => {
+                console.error('Error updating task:', error);
+                Swal.fire('Error updating task!', 'Please try again later.', 'error');
+              });
+          } else {
+            Swal.fire('Task title cannot be empty!', '', 'error');
+          }
+        }
+      });
+    }
+
+
+    return {
+      taskindex,
+      isAddTaskModalOpen,
+      newTask,
+      showAddTaskModal,
+      closeAddTaskModal,
+      addTask,
+      removeTask,
+      editTask,
+
+
+    };
+  },
+};
+</script>  -->
 <script>
 import { ref, onMounted } from 'vue';
 import Swal from 'sweetalert2';
@@ -130,7 +288,7 @@ export default {
     }
 
     function removeTask(taskId) {
-      axios.delete(`http://localhost:3000/task/${taskId}`)
+      axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}`)
         .then(() => {
           taskindex.value = taskindex.value.filter((task) => task.id !== taskId);
         })
@@ -190,7 +348,7 @@ export default {
             taskToEdit.assigned = updatedTask.assigned.trim();
 
             axios
-              .put(`http://localhost:3000/task/${taskId}`, taskToEdit)
+              .put(`http://127.0.0.1:8000/api/tasks/${taskId}`, taskToEdit)
               .then(() => {
                 Swal.fire('Task updated successfully!', '', 'success');
               })
@@ -205,7 +363,6 @@ export default {
       });
     }
 
-
     return {
       taskindex,
       isAddTaskModalOpen,
@@ -215,12 +372,10 @@ export default {
       addTask,
       removeTask,
       editTask,
-
-
     };
   },
 };
-</script> 
+</script>
 
 
 <style scoped>

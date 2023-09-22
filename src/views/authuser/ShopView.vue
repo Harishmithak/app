@@ -39,7 +39,7 @@ export default {
 
 
     fetchData() {
-      axios.get('http://localhost:3000/task')
+      axios.get('http://127.0.0.1:8000/api/tasks')
         .then((response) => {
           this.taskindex = response.data;
         })
